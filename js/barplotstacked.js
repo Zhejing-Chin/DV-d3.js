@@ -24,7 +24,7 @@ var bpSubCategoryColor = d3.scaleOrdinal()
 
 // Restructure data to be displayed using d3 graphs.
 // *File is read in a local server.
-d3.csv("../data/cleaned_googleplaystore_user_reviews.csv", function (data)
+d3.csv("data/cleaned_googleplaystore_user_reviews.csv", function (data)
 {
     // Restructure data for word cloud & bar plot.
     for (i = 0; i < data.length; i++)
