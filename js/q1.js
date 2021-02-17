@@ -63,7 +63,7 @@ function update(selectedVar) {
     var countCat = {};
 
     // Parse the Data    
-    d3.csv("../data/cleaned-googleplaystore.csv", function(data) {
+    d3.csv("data/cleaned-googleplaystore.csv", function(data) {
 
     data.forEach(function(obj) {
         var cat = obj[selectedVar];

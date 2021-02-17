@@ -39,7 +39,7 @@ var svg2 = container2
 var shareCat = {};
 
 // Parse the Data    
-d3.csv("../data/cleaned-googleplaystore.csv", function(data) {
+d3.csv("data/cleaned-googleplaystore.csv", function(data) {
     var total_apps = data.length;
 
 
