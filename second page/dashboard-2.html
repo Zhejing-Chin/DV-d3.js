@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8>
+    <link rel="stylesheet" href="../css/style.css"> 
+</head>
+
+<body>
+    <center><h1>Things to know before developing an application to publish on Google Play Store </h1></center>
+    
+    <div style="float:left">
+        <h2 style="font-size:24px;">What is the most common application size for each category?</h2>
+        <!-- py's visualization -->
+
+        <a href="../main.html" class="previous">
+            <div class="shadow"></div>
+            <span>&laquo; Previous</span>
+        </a>
+    </div>
+
+    <!-- Create a div where the graph will take place -->
+    <div style="float:right">
+        <div id="bar_plot_stacked_viz">
+            <h2 style="font-size:24px;">Sentiment analysis according to the category</h2>
+            <svg id="bpSVG"></svg>
+        </div>
+
+        <h2 style="font-size:24px;">Which words are mentioned the most based on review for each category?</h2>
+        <select id="selectedCategory", style="width: 750px;font-size: 14px;padding: 3px;"> </select>
+
+        <div id="loadingText"
+            style="display: flex; justify-content: center; align-items: center;margin: auto;">
+            <span>LOADING DATA...</span>
+        </div>
+        <div id="word_cloud_viz">
+            <svg id="wcSVG"></svg>
+        </div>
+    </div>
+
+    
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js"></script>
+    <script src="../second page/dashboard-2.js"></script>
+</body>
+
+</html>

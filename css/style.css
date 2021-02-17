@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Pacifico');
+/* include variables for the project 
+- fonts for headings and other text elements
+- colors for text, background gradient and SVG elements
+*/
+#q1 {
+  float: left;
+  margin-left: auto;
+  /* max-height: 100vh; */
+  
+}
+#q2 {
+  float: right;
+  padding:10px;
+  margin-right: auto;
+}
+#q1, #q2 {
+  /* height: 400px; 
+  overflow-y: auto; */
+  padding:10px;
+  background: linear-gradient(to bottom right, #bd917a, #8cad65);
+  align-items: center;
+  align-content: center;
+  align-self: center;
+}
+
+
+h3#title {
+  padding-top: 10px;
+  color: white;
+  text-align: center;
+}
+
+#tooltip {
+  position: absolute;			
+  text-align: center;			
+  width: 60px;					
+  height: 10px;					
+  padding: 5px;				
+  font: 12px sans-serif;		
+  background: #fae1dd;	
+  border: 0px;		
+  border-radius: 8px;			
+  pointer-events: none;	
+}
+
+.container__svg, .container2__svg {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* path as segment, line as tick */
+.axis path, line{
+  stroke:white;
+  stroke-width: 2px;
+}
+.axis text{
+  fill:white;
+}
+
+#button1, #button2 {
+  text-align: center;
+  width: 100px;
+  background-color:#6b705c;
+  border: #b7b7a4;
+  font-family: Helvetica,  sans-serif;
+  font-size: 11px;
+  color: #fff;
+  letter-spacing: 1px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: normal;
+  border-radius: 4px;
+  line-height: 1.5;
+  text-decoration:none;
+  margin: 3px;
+  
+}
+
+#button1:hover, #button2:hover { 
+  background-color:#a5a58d;
+  border: #b7b7a4;
+  font-family: Arial, Geneva, Arial, Helvetica,  sans-serif;
+  font-size: 11px;
+  color: #000;
+  letter-spacing: 1px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: normal;
+  border-radius: 4px;
+  line-height: 1.5;
+  text-decoration:none;
+}
+
+circle {
+  fill: #ddbea9;
+  stroke: white;
+  stroke-width: 2px;
+}
+
+line {
+  stroke: rgb(255, 255, 255);
+  stroke-width: 2px;
+
+}
+
+.next {
+  float: right;
+}
+
+.previous {
+  float: left;
+}
+
+.next, .previous, .shadow {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  text-align: center;
+  line-height: 30px;
+  height: 60px;
+  width: 180px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 16px;
+  color: rgba(255,255,255,0.9);
+  border-radius: 50px;
+  background: linear-gradient(-45deg, #FFA63D, #FF3D77, #338AFF, #3CF0C5);
+  background-size: 600%;
+  animation: anime 16s linear infinite;
+}
+
+.shadow{
+  position: absolute;
+  margin-top: 20px;
+  z-index: -1;
+  filter: blur(30px);
+  opacity: 0.8;
+}
+     
+span {
+  position: relative;
+  top: 16px;
+}
+
+.next:hover, .previous:hover {
+  color: black;
+}
+
+@keyframes anime {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+   
+
+
