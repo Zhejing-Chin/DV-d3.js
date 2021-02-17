@@ -3,7 +3,7 @@ const minimumWordSize = 10;
 const maximumWordSize = 25;
 
 /** General */
-var selectedWordSize = 200;
+var selectedWordSize = 50;
 var selectedCategory = "HEALTH_AND_FITNESS";
 
 var structuredData = new Map(); // Sorted, unique and stuff.
@@ -11,7 +11,7 @@ var words = []; // Words to be shown.
 var barPlotData = []; // Restructured data for bar plot.
 var stackedData = [];
 var categories = [];
-var subCategory = ['positive', 'neutral', 'negative'];
+var subCategory = ['Positive', 'Neutral', 'Negative'];
 
 /** Word cloud */
 var wcMargin = {top: 10, right: 10, bottom: 10, left: 10},
@@ -28,7 +28,7 @@ var wcSVG = d3.select("#word_cloud_viz")
 var wcLayout = d3.layout.cloud();
 
 /**Bar plot stacked  */
-var bpMargin = {top: 10, right: 30, bottom: 20, left: 50},
+var bpMargin = {top: 10, right: 30, bottom: 40, left: 50},
     bpWidth = 750 - bpMargin.left - bpMargin.right,
     bpHeight = 360 - bpMargin.top - bpMargin.bottom;
 
@@ -79,19 +79,19 @@ d3.csv("data/cleaned_googleplaystore_user_reviews.csv", function (data)
                 { // Add to existing word and then size++;
                     words[0].size++;
                     if (data[i].Sentiment_Polarity > 0)
-                        words[0].positive++;
+                        words[0].Positive++;
                     else if (data[i].Sentiment_Polarity == 0)
-                        words[0].neutral++;
+                        words[0].Neutral++;
                     else
-                        words[0].negative++;
+                        words[0].Negative++;
                 } else
                 { // Push new word with size == 0.
                     if (data[i].Sentiment_Polarity > 0)
-                        structuredData.get(data[i].Category).push({word: wordInSentence, size: 1, positive: 1, neutral: 0, negative: 0});
+                        structuredData.get(data[i].Category).push({word: wordInSentence, size: 1, Positive: 1, Neutral: 0, Negative: 0});
                     else if (data[i].Sentiment_Polarity == 0)
-                        structuredData.get(data[i].Category).push({word: wordInSentence, size: 1, positive: 0, neutral: 1, negative: 0});
+                        structuredData.get(data[i].Category).push({word: wordInSentence, size: 1, Positive: 0, Neutral: 1, Negative: 0});
                     else
-                        structuredData.get(data[i].Category).push({word: wordInSentence, size: 1, positive: 0, neutral: 0, negative: 1});
+                        structuredData.get(data[i].Category).push({word: wordInSentence, size: 1, Positive: 0, Neutral: 0, Negative: 1});
                 }
             }
         });
@@ -103,19 +103,19 @@ d3.csv("data/cleaned_googleplaystore_user_reviews.csv", function (data)
             isExistInBP[0].total++;
 
             if (data[i].Sentiment_Polarity > 0)
-                isExistInBP[0].positive += 1;
+                isExistInBP[0].Positive += 1;
             else if (data[i].Sentiment_Polarity == 0)
-                isExistInBP[0].neutral += 1;
+                isExistInBP[0].Neutral += 1;
             else
-                isExistInBP[0].negative += 1;
+                isExistInBP[0].Negative += 1;
         } else
         {
             if (data[i].Sentiment_Polarity > 0)
-                barPlotData.push({category: data[i].Category, total: 1, positive: 1, neutral: 0, negative: 0});
+                barPlotData.push({category: data[i].Category, total: 1, Positive: 1, Neutral: 0, Negative: 0});
             else if (data[i].Sentiment_Polarity == 0)
-                barPlotData.push({category: data[i].Category, total: 1, positive: 0, neutral: 1, negative: 0});
+                barPlotData.push({category: data[i].Category, total: 1, Positive: 0, Neutral: 1, Negative: 0});
             else
-                barPlotData.push({category: data[i].Category, total: 1, positive: 0, neutral: 0, negative: 1});
+                barPlotData.push({category: data[i].Category, total: 1, Positive: 0, Neutral: 0, Negative: 1});
         }
     }
 
@@ -153,32 +153,21 @@ function generateWC()
     for (i = 0; i < selectedWordSize; i++)
     {
         averageSize += sortedUniqueWords[i].size;
-        words.push({word: sortedUniqueWords[i].word, size: sortedUniqueWords[i].positive, type: "positive"});
-        words.push({word: sortedUniqueWords[i].word, size: sortedUniqueWords[i].neutral, type: "neutral"});
-        words.push({word: sortedUniqueWords[i].word, size: sortedUniqueWords[i].negative, type: "negative"});
+        words.push({word: sortedUniqueWords[i].word, size: sortedUniqueWords[i].Positive, type: "Positive"});
+        words.push({word: sortedUniqueWords[i].word, size: sortedUniqueWords[i].Neutral, type: "Neutral"});
+        words.push({word: sortedUniqueWords[i].word, size: sortedUniqueWords[i].Negative, type: "Negative"});
     }
 
     // Calculate average and set the sizes.
-    // averageSize = averageSize / selectedWordSize;
-    // if (averageSize > 0)
-    // {
-    words.forEach((chosenWord,) =>
+    averageSize = averageSize / selectedWordSize;
+    if (averageSize > 0)
     {
-        if (chosenWord.size < 10)
+        words.forEach((chosenWord,) =>
         {
-            chosenWord.size = minimumWordSize;
-        }
-        // chosenWord.size = chosenWord.size / averageSize * 50;
-        // if (chosenWord.size / averageSize < 0.5)
-        // {
-        //     chosenWord.size = minimumWordSize;
-        // } else
-        // {
-        //     chosenWord.size = maximumWordSize;
-        // }
-    });
-    console.log(words);
-    // }
+            chosenWord.size = chosenWord.size / averageSize * 30;
+        });
+        console.log(words);
+    }
 
     // Draw word cloud.
     wcLayout.size([wcWidth, wcHeight])
@@ -194,7 +183,7 @@ function generateWC()
 function drawWC(words)
 {
     var zoom = d3.zoom()
-        .scaleExtent([1, 10])
+        .scaleExtent([1, 50])
         .on("zoom", function (event, d)
         {
             var e = d3.event.transform,
@@ -222,7 +211,7 @@ function drawWC(words)
         .style("font-family", "Impact")
         .style("fill", function (d)
         {
-            return d.type == "positive" ? "#15607A" : d.type == "neutral" ? "#FFC684" : "#FF483A";
+            return d.type == "Positive" ? "#15607A" : d.type == "Neutral" ? "#FFC684" : "#FF483A";
         })
         .attr("text-anchor", "middle")
         .attr('font-size', 1)
@@ -244,9 +233,9 @@ function generateBP()
 {
     barPlotData.forEach(data =>
     {
-        data.positive = (data.positive / data.total) * 100;
-        data.negative = (data.negative / data.total) * 100;
-        data.neutral = (data.neutral / data.total) * 100;
+        data.Positive = (data.Positive / data.total) * 100;
+        data.Negative = (data.Negative / data.total) * 100;
+        data.Neutral = (data.Neutral / data.total) * 100;
     });
 
     stackedData = d3.stack()
@@ -267,8 +256,10 @@ function generateBP()
         .attr("x", function (d) {return x(d.data.category);})
         .attr("y", function (d) {return y(d[1]);})
         .attr("height", function (d) {return y(d[0]) - y(d[1]);})
-        .attr("width", x.bandwidth());
-
+        .attr("width", x.bandwidth())
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave);
 
     bpSVG.append("g")
         .attr("transform", "translate(0," + bpHeight + ")")
@@ -280,7 +271,52 @@ function generateBP()
         .attr("transform", "rotate(-90)")
         .style("text-anchor", "start")
         .style("fill", "white")
-        .style("font-size", "14");
+        .style("font-size", "12");
+
     bpSVG.append("g")
         .call(d3.axisLeft(y));
+
+    bpSVG.append("circle").attr("cx", 200).attr("cy", 340).attr("r", 7).style("fill", "#15607A");
+    bpSVG.append("circle").attr("cx", 300).attr("cy", 340).attr("r", 7).style("fill", "#FFC684");
+    bpSVG.append("circle").attr("cx", 400).attr("cy", 340).attr("r", 7).style("fill", "#FF483A");
+    bpSVG.append("text").attr("x", 212).attr("y", 341).text("Positive").style("font-size", "16px").attr("alignment-baseline", "middle");
+    bpSVG.append("text").attr("x", 312).attr("y", 341).text("Neutral").style("font-size", "16px").attr("alignment-baseline", "middle");
+    bpSVG.append("text").attr("x", 412).attr("y", 341).text("Negative").style("font-size", "16px").attr("alignment-baseline", "middle");
+
 }
+
+var tooltip = d3.select("#bar_plot_stacked_viz")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "1px")
+    .style("border-radius", "5px")
+    .style("padding", "10px")
+    .style("position", "absolute");
+
+
+// Three function that change the tooltip when user hover / move / leave a cell
+var mouseover = function (d)
+{
+    var subgroupName = d3.select(this.parentNode).datum().key;
+    var subgroupValue = d.data[subgroupName];
+    tooltip
+        .html(subgroupValue)
+        .style("opacity", 0.9)
+        .style("font-size", "12px")
+        .style("background", "white");
+
+};
+var mousemove = function (d)
+{
+    tooltip
+        .style("left", (d3.event.pageX - 110 + "px")) // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+        .style("top", (d3.mouse(this)[1] + 100) + "px");
+};
+var mouseleave = function (d)
+{
+    tooltip
+        .style("opacity", 0);
+};
