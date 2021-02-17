@@ -10,8 +10,6 @@ var structuredData = new Map(); // Sorted, unique and stuff.
 var words = []; // Words to be shown.
 var barPlotData = []; // Restructured data for bar plot.
 var stackedData = [];
-var categories = [];
-var subCategory = ['Positive', 'Neutral', 'Negative'];
 
 /** Word cloud */
 var wcMargin = {top: 10, right: 10, bottom: 10, left: 10},
@@ -27,24 +25,6 @@ var wcSVG = d3.select("#word_cloud_viz")
         "translate(" + wcMargin.left + "," + wcMargin.top + ")");
 var wcLayout = d3.layout.cloud();
 
-/**Bar plot stacked  */
-var bpMargin = {top: 10, right: 30, bottom: 40, left: 50},
-    bpWidth = 750 - bpMargin.left - bpMargin.right,
-    bpHeight = 360 - bpMargin.top - bpMargin.bottom;
-
-var bpSVG = d3.select("#bar_plot_stacked_viz")
-    .select("#bpSVG")
-    .attr("width", bpWidth + bpMargin.left + bpMargin.right)
-    .attr("height", bpHeight + bpMargin.top + bpMargin.bottom)
-    .append("g")
-    .attr("transform",
-        "translate(" + bpMargin.left + "," + bpMargin.top + ")");
-// Bar plot axes
-var x, y;
-var bpSubCategoryColor = d3.scaleOrdinal()
-    .domain(subCategory)
-    .range(['#15607A', '#FFC684', '#FF483A']);
-
 document.getElementById("selectedCategory").addEventListener('change', (event) =>
 {
     selectedCategory = event.target.value;
@@ -55,7 +35,7 @@ document.getElementById("selectedCategory").addEventListener('change', (event) =
 
 // Restructure data to be displayed using d3 graphs.
 // *File is read in a local server.
-d3.csv("data/cleaned_googleplaystore_user_reviews.csv", function (data)
+d3.csv("../data/cleaned_googleplaystore_user_reviews.csv", function (data)
 {
     // Restructure data for word cloud & bar plot.
     for (i = 0; i < data.length; i++)
@@ -95,28 +75,6 @@ d3.csv("data/cleaned_googleplaystore_user_reviews.csv", function (data)
                 }
             }
         });
-
-        /** Bar plot */
-        let isExistInBP = barPlotData.filter(dt => dt.category == data[i].Category);
-        if (isExistInBP.length > 0)
-        {
-            isExistInBP[0].total++;
-
-            if (data[i].Sentiment_Polarity > 0)
-                isExistInBP[0].Positive += 1;
-            else if (data[i].Sentiment_Polarity == 0)
-                isExistInBP[0].Neutral += 1;
-            else
-                isExistInBP[0].Negative += 1;
-        } else
-        {
-            if (data[i].Sentiment_Polarity > 0)
-                barPlotData.push({category: data[i].Category, total: 1, Positive: 1, Neutral: 0, Negative: 0});
-            else if (data[i].Sentiment_Polarity == 0)
-                barPlotData.push({category: data[i].Category, total: 1, Positive: 0, Neutral: 1, Negative: 0});
-            else
-                barPlotData.push({category: data[i].Category, total: 1, Positive: 0, Neutral: 0, Negative: 1});
-        }
     }
 
     // Add categories to select/dropdown
@@ -129,26 +87,14 @@ d3.csv("data/cleaned_googleplaystore_user_reviews.csv", function (data)
         document.getElementById("selectedCategory").appendChild(option);
     });
 
-    // Bar plot axes
-    x = d3.scaleBand()
-        .domain(categories)
-        .range([0, bpWidth])
-        .padding([0.2]);
-    y = d3.scaleLinear()
-        .domain([0, 100])
-        .range([bpHeight, 0]);
 
-    generateBP();
-    // Finish loading data
-    document.getElementById('loadingText').style.display = "none";
-    
+    // Finish loading data, draw
     generateWC();
-    
 });
 
 function generateWC()
 {
-    document.getElementById('loadingText').style.display = "block";
+    document.getElementById('loadingWC').style.display = "block";
     let averageSize = 0;
 
     sortedUniqueWords = structuredData.get(selectedCategory).sort((a, b) => b.size - a.size);
@@ -180,6 +126,7 @@ function generateWC()
         .font("Impact")
         .on("end", drawWC); // <--- drawMC() function
     wcLayout.start();
+    document.getElementById('loadingWC').style.display = "none";
 }
 
 function drawWC(words)
@@ -226,9 +173,6 @@ function drawWC(words)
             return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
         })
         .style("fill-opacity", 1);
-
-
-    document.getElementById('loadingText').style.display = "none";
 }
 
 function generateBP()
@@ -284,41 +228,4 @@ function generateBP()
     bpSVG.append("text").attr("x", 212).attr("y", 341).text("Positive").style("font-size", "16px").attr("alignment-baseline", "middle");
     bpSVG.append("text").attr("x", 312).attr("y", 341).text("Neutral").style("font-size", "16px").attr("alignment-baseline", "middle");
     bpSVG.append("text").attr("x", 412).attr("y", 341).text("Negative").style("font-size", "16px").attr("alignment-baseline", "middle");
-
 }
-
-var tooltip = d3.select("#bar_plot_stacked_viz")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "1px")
-    .style("border-radius", "5px")
-    .style("padding", "10px")
-    .style("position", "absolute");
-
-
-// Three function that change the tooltip when user hover / move / leave a cell
-var mouseover = function (d)
-{
-    var subgroupName = d3.select(this.parentNode).datum().key;
-    var subgroupValue = d.data[subgroupName];
-    tooltip
-        .html(subgroupValue)
-        .style("opacity", 0.9)
-        .style("font-size", "12px")
-        .style("background", "white");
-
-};
-var mousemove = function (d)
-{
-    tooltip
-        .style("left", (d3.event.pageX - 110 + "px")) // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-        .style("top", (d3.mouse(this)[1] + 100) + "px");
-};
-var mouseleave = function (d)
-{
-    tooltip
-        .style("opacity", 0);
-};

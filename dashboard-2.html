@@ -3,7 +3,8 @@
 
 <head>
     <meta charset=utf-8>
-    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="../css/style.css"> 
+    <title>Google Play Store Facts</title>
 </head>
 
 <body>
@@ -13,7 +14,7 @@
         <h2 style="font-size:24px;">What is the most common application size for each category?</h2>
         <!-- py's visualization -->
 
-        <a href="index.html" class="previous">
+        <a href="../main.html" class="previous">
             <div class="shadow"></div>
             <span>&laquo; Previous</span>
         </a>
@@ -23,26 +24,27 @@
     <div style="float:right">
         <div id="bar_plot_stacked_viz">
             <h2 style="font-size:24px;">Sentiment analysis according to the category</h2>
+            <div id="loadingBP" style="display: flex; justify-content: center; align-items: center;margin: auto;">
+                LOADING DATA...
+            </div>
             <svg id="bpSVG"></svg>
         </div>
 
-        <h2 style="font-size:24px;">Which words are mentioned the most based on review for each category?</h2>
-        <select id="selectedCategory", style="width: 750px;font-size: 14px;padding: 3px;"> </select>
+        <select id="selectedCategory" , style="width: 750px;font-size: 14px;padding: 3px;"> </select>
 
-        <div id="loadingText"
-            style="display: flex; justify-content: center; align-items: center;margin: auto;">
-            <span>LOADING DATA...</span>
-        </div>
         <div id="word_cloud_viz">
+            <h2 style="font-size:24px;">Which words are mentioned the most based on review for each category?</h2>
+            <div id="loadingWC" style="display: flex; justify-content: center; align-items: center;margin: auto;">
+                LOADING DATA...
+            </div>
             <svg id="wcSVG"></svg>
         </div>
     </div>
 
-    
-
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js"></script>
-    <script src="js/dashboard-2.js"></script>
+    <script src="../second page/barplotstacked.js"></script>
+    <script src="../second page/wordcloud.js"></script>
 </body>
 
 </html>
