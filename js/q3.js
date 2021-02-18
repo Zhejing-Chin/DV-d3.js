@@ -1,6 +1,6 @@
 // set the dimensions and margins of the graph
 var margin = {top: 20, right: 20, bottom: 50, left: 350},
-    width = 630 - margin.left - margin.right,
+    width = 650 - margin.left - margin.right,
     height = 750 - margin.top - margin.bottom;
 
 // set the ranges
@@ -45,7 +45,7 @@ return d;
     var data = csv.filter(function(d) { 
         var sq = d3.select("#filter").property("value");
         return d.Category === sq;
-    }).slice(0, 20); //get the top 15
+    }).slice(0, 10); //get the top 15
 
     console.log(data);
 
@@ -121,7 +121,7 @@ return d;
     function applyFilter(value) {
 
         // filter the data
-        var data = csv.filter(function(d) {return d.Category === value;}).slice(0,20);
+        var data = csv.filter(function(d) {return d.Category === value;}).slice(0,10);
 
         data.sort(function(a, b) {
         // return a.installs - b.installs;
