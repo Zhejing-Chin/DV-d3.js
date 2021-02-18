@@ -7,7 +7,7 @@ const container2 = d3.select(".container #q2");
 container2
   .append("h3")
   .attr("id", "title")
-  .text("What is the average app price of each category?");
+  .text("What is the average app price of each category? (USD)");
 
 // include also a tooltip, but in the main container2
 var tooltip = container2
