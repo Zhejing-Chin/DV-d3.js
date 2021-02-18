@@ -51,10 +51,14 @@ function update(selectedVar) {
         document.getElementById("button1")
         .style.backgroundColor = "#e29578";
         document.getElementById("button2")
-        .style.backgroundColor = "#6b705c";
+        .style.backgroundColor = "#343a40";
+        document.getElementById("button2")
+        .style.border = "1px solid #e29578";
     } else {
         document.getElementById("button1")
-        .style.backgroundColor = "#6b705c";
+        .style.backgroundColor = "#343a40";
+        document.getElementById("button1")
+        .style.border = "1px solid #e29578";
         document.getElementById("button2")
         .style.backgroundColor = "#e29578";
     };
