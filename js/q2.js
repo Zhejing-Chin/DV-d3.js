@@ -1,4 +1,4 @@
-// <!-- Which category has the highest share of apps in the market? -->
+// <!-- Which category has the highest avgprice of apps in the market? -->
 const container2 = d3.select(".container #q2");
 
 // HTML ELEMENTS
@@ -7,7 +7,7 @@ const container2 = d3.select(".container #q2");
 container2
   .append("h3")
   .attr("id", "title")
-  .text("Which category has the highest share of apps in the market?");
+  .text("What is the average app price of each category?");
 
 // include also a tooltip, but in the main container2
 var tooltip = container2
@@ -36,37 +36,39 @@ var svg2 = container2
     .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-var shareCat = {};
+var priceCat = {};
+var totalCat = {};
 
 // Parse the Data    
 d3.csv("data/cleaned-googleplaystore.csv", function(data) {
-    var total_apps = data.length;
-
 
 data.forEach(function(obj) {
     var cat = obj.Category;
 
-    if(shareCat[cat] === undefined) {
-        shareCat[cat] = 1;
+    if(priceCat[cat] === undefined) {
+        priceCat[cat] = parseInt(obj.Price, 10);
+        totalCat[cat] = 1;
     } else {
-        shareCat[cat] = shareCat[cat] + 1;
+        priceCat[cat] = priceCat[cat] + parseInt(obj.Price, 10);
+        totalCat[cat] = totalCat[cat] + 1;
     }
     
 });
 
-// now store the share in each data member
+console.log(priceCat)
+// now store the avgprice in each data member
 data.forEach(function(d) {
     var cat = d.Category;
-    d.share = (shareCat[cat] / total_apps * 100).toFixed(2);
+    d.avgprice = (priceCat[cat] / totalCat[cat]).toFixed(2);
 });
 
 // sort data
 data.sort(function(b, a) {
-return a.share - b.share;
+return a.avgprice - b.avgprice;
 });
 
 // get maximum value of our dataset
-var maxValue = d3.max(data, function(d) { return +d.share;} ); 
+var maxValue = d3.max(data, function(d) { return +d.avgprice;} ); 
 
 // Add x1 axis
 var x1 = d3.scaleLinear()
@@ -114,12 +116,12 @@ svg2.selectAll("circle.q2-circle")
 svg2.selectAll("circle.q2-circle")
   .transition()
   .duration(2000)
-  .attr("cx", function(d) { return x1(d.share); })
+  .attr("cx", function(d) { return x1(d.avgprice); })
 
 svg2.selectAll("line.q2-line")
   .transition()
   .duration(2000)
-  .attr("x1", function(d) { return x1(d.share); })
+  .attr("x1", function(d) { return x1(d.avgprice); })
 
 svg2.selectAll("circle.q2-circle")
 // on mouseenter display the tooltip including text pertaining to the data point
@@ -129,7 +131,7 @@ svg2.selectAll("circle.q2-circle")
     .style("opacity", "1")
     .style("top", (d3.event.pageY) + "px")
     .style("left", d3.event.pageX + "px")
-    .text(d.share + "%")
+    .text("$" + d.avgprice)
     
     var rad = +d3.select(this).attr("r")
     d3.select(this).attr("r", rad +7)
