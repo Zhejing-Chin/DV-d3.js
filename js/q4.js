@@ -109,6 +109,17 @@ d3.csv("data/cleaned-googleplaystore.csv", function(d) {
         .style("text-anchor", "middle")
         .text("Count"); 
     
+    // 0, 20, 40, 60, 80, 100
+    svg3.append("rect").attr("x",540).attr("y",20).attr("width", 170).attr("height", 130).
+    style("stroke", "#bc4749").style("fill", "none").style("stroke-width", "1px");
+    
+    svg3.append("text").attr("x", 550).attr("y", 38).text("Very Small: 0 - 20M").style("font-size", "14px");
+    svg3.append("text").attr("x", 550).attr("y", 58).text("Small: 21M - 40M").style("font-size", "14px");
+    svg3.append("text").attr("x", 550).attr("y", 78).text("Medium: 41M - 60M").style("font-size", "14px");
+    svg3.append("text").attr("x", 550).attr("y", 98).text("Big: 61M - 80M").style("font-size", "14px");
+    svg3.append("text").attr("x", 550).attr("y", 118).text("Very Big: 81M - 100M").style("font-size", "14px");
+    svg3.append("text").attr("x", 550).attr("y", 138).text("Varies: Varies with device").style("font-size", "14px");
+
     svg3.selectAll(".bar")
         .data(nested_data2)
         .enter()

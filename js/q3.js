@@ -1,6 +1,6 @@
 // set the dimensions and margins of the graph
 var margin = {top: 20, right: 20, bottom: 50, left: 350},
-    width = 650 - margin.left - margin.right,
+    width = 630 - margin.left - margin.right,
     height = 750 - margin.top - margin.bottom;
 
 // set the ranges
@@ -25,7 +25,9 @@ var tooltip1 = d3.select("#q3").append("div").attr("class", "toolTip");
 
 // load the data
 d3.csv("data/cleaned-googleplaystore.csv", function(d) {
-    d.rating = +d.Rating; 
+    d.installs = +d.Installs; 
+    d.installs = d.installs/1000000;
+    d.rating = +d.Rating;
 return d;
 }, function(error, datafile) {
 
@@ -33,7 +35,7 @@ return d;
 
     //descending sort 
     datafile.sort(function(a, b) {
-        return d3.descending(+a.rating, +b.rating);
+        return d3.descending(+a.installs, +b.installs);
     });
 
     // put the original data in csv
@@ -48,11 +50,25 @@ return d;
     console.log(data);
 
     data.sort(function(a, b) {
-        return a.rating - b.rating;
+        var aInstalls = a.installs;
+        var bInstalls = b.installs;
+        var aRating = a.rating;
+        var bRating = b.rating;
+        // return a.installs - b.installs;
+
+        if(aInstalls == bInstalls)
+        {
+            return (aRating < bRating) ? -1 : (aRating > bRating) ? 1 : 0;
+        }
+        else
+        {
+            return (aInstalls < bInstalls) ? -1 : 1;
+        }
+
     }); 
 
     // Scale the range of the data in the domains
-    x2.domain([0, d3.max(data, function(d){ return d.rating; })])
+    x2.domain([0, d3.max(data, function(d){ return d.installs; })])
     y2.domain(data.map(function(d) { return d.App; }));
     
     // append the rectangles for the bar chart
@@ -60,7 +76,7 @@ return d;
         .data(data)
         .enter().append("rect")
         .attr("class", "bar")
-        .attr("width", function(d) {return x2(d.rating); } )
+        .attr("width", function(d) {return x2(d.installs); } )
         .attr("y", function(d) { return y2(d.App); })
         .attr("height", y2.bandwidth()-5) //20
         .on("mousemove", function(d){
@@ -69,7 +85,7 @@ return d;
                 .style("left", d3.event.pageX - 40 + "px")
                 .style("top", d3.event.pageY - 60 + "px")
                 .style("display", "inline-block")
-                .html((d.App) + ", " + "<b>" + (d.rating) + "M" + "</b>");
+                .html(("Rating: " + "<b>" + (d.Rating) + "</b>" + ", " + "Num of Installs: " + "<b>" + (d.installs) + "M" + "</b>"));
             })
         .on("mouseout", function(d){ tooltip1.style("display", "none");});
 
@@ -82,7 +98,7 @@ return d;
     svg.append("text")             
         .attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 20) + ")")
         .style("text-anchor", "middle")
-        .text("Rating");
+        .text("Number of Installs (M)");
         
     // add the y2 Axis
     svg.append("g")
@@ -108,10 +124,24 @@ return d;
         var data = csv.filter(function(d) {return d.Category === value;}).slice(0,20);
 
         data.sort(function(a, b) {
-        return a.rating - b.rating;
+        // return a.installs - b.installs;
+            var aInstalls = a.installs;
+            var bInstalls = b.installs;
+            var aRating = a.rating;
+            var bRating = b.rating;
+            // return a.installs - b.installs;
+
+            if(aInstalls == bInstalls)
+            {
+                return (aRating < bRating) ? -1 : (aRating > bRating) ? 1 : 0;
+            }
+            else
+            {
+                return (aInstalls < bInstalls) ? -1 : 1;
+            }
         });
         
-        x2.domain([0, d3.max(data, function(d){ return d.rating; })])
+        x2.domain([0, d3.max(data, function(d){ return d.installs; })])
         y2.domain(data.map(function(d) { return d.App; }));
         
         svg.select('.x2.axis1').transition().duration(300).call(d3.axisBottom(x2));
@@ -123,7 +153,7 @@ return d;
         bars.exit()
             .transition()
             .duration(300)
-            .attr("width", function(d) {return x2(d.rating); } )
+            .attr("width", function(d) {return x2(d.installs); } )
             .attr("y", function(d) { return y2(d.App); })
             .attr("height", y2.bandwidth()-5) 
             .remove();
@@ -131,7 +161,7 @@ return d;
         // data that needs DOM = enter() 
         bars.enter().append("rect")
             .attr("class", "bar")
-            .attr("width", function(d) {return x2(d.rating); } ) 
+            .attr("width", function(d) {return x2(d.installs); } ) 
             .attr("y", function(d) { return y2(d.App); })
             .attr("height", y2.bandwidth()-5)
             .on("mousemove", function(d){
@@ -140,14 +170,14 @@ return d;
                     .style("left", d3.event.pageX - 40 + "px")
                     .style("top", d3.event.pageY - 60 + "px")
                     .style("display", "inline-block")
-                    .html((d.App) + ", " + "<b>" + (d.rating) + "</b>");
+                    .html(("Rating: " + "<b>" + (d.Rating) + "</b>" + ", " + "Num of Installs: " + "<b>" + (d.installs) + "M" + "</b>"));
                 })
             .on("mouseout", function(d){ tooltip1.style("display", "none");}); 
 
         // the "UPDATE" set:
         bars.transition().duration(300)
-            .attr("x", function(d) { return x2(d.rating); }) 
-            .attr("width", function(d) {return x2(d.rating); } )
+            .attr("x", function(d) { return x2(d.installs); }) 
+            .attr("width", function(d) {return x2(d.installs); } )
             .attr("y", function(d) { return y2(d.App); })
             .attr("height", y2.bandwidth()-5); 
     }
